@@ -1,0 +1,170 @@
+//
+// ********************************************************************
+// * License and Disclaimer                                           *
+// *                                                                  *
+// * The  Geant4 software  is  copyright of the Copyright Holders  of *
+// * the Geant4 Collaboration.  It is provided  under  the terms  and *
+// * conditions of the Geant4 Software License,  included in the file *
+// * LICENSE and available at  http://cern.ch/geant4/license .  These *
+// * include a list of copyright holders.                             *
+// *                                                                  *
+// * Neither the authors of this software system, nor their employing *
+// * institutes,nor the agencies providing financial support for this *
+// * work  make  any representation or  warranty, express or implied, *
+// * regarding  this  software system or assume any liability for its *
+// * use.  Please see the license in the file  LICENSE  and URL above *
+// * for the full disclaimer and the limitation of liability.         *
+// *                                                                  *
+// * This  code  implementation is the result of  the  scientific and *
+// * technical work of the GEANT4 collaboration.                      *
+// * By using,  copying,  modifying or  distributing the software (or *
+// * any work based  on the software)  you  agree  to acknowledge its *
+// * use  in  resulting  scientific  publications,  and indicate your *
+// * acceptance of all terms of the Geant4 Software license.          *
+// ********************************************************************
+//
+//
+// $Id: ExN02SteppingAction.cc,v 1.9 2006/06/29 17:48:18 gunter Exp $
+// GEANT4 tag $Name: geant4-09-02 $
+// 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+#include "ExN02SteppingAction.hh"
+#include "G4SteppingManager.hh"
+#include "ExN02EventAction.hh"
+#include "ExN02RunAction.hh"
+#include "Randomize.hh"
+#include "G4VProcess.hh"
+#include "TRandom3.h"
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+ExN02SteppingAction::ExN02SteppingAction(ExN02RunAction* myrun,ExN02EventAction* myevent) : run_action(myrun), event_action(myevent)
+{ }
+
+
+
+//def distruttore
+ExN02SteppingAction::~ExN02SteppingAction()
+{}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void ExN02SteppingAction::UserSteppingAction(const G4Step *aStep)
+{ 
+  G4double effi1[10][10] = {{0.706,0.780,0.789,0.805,0.797,0.797,0.789,0.789,0.797,0.730},
+			    {0.816,0.902,0.912,0.931,0.922,0.922,0.912,0.912,0.922,0.845},
+			    {0.808,0.893,0.903,0.922,0.912,0.912,0.903,0.903,0.912,0.836},
+			    {0.799,0.884,0.893,0.912,0.902,0.902,0.893,0.893,0.902,0.827},
+			    {0.791,0.874,0.884,0.902,0.893,0.893,0.884,0.884,0.893,0.818},
+			    {0.816,0.902,0.912,0.931,0.922,0.922,0.912,0.912,0.922,0.845},
+			    {0.816,0.902,0.912,0.931,0.922,0.922,0.912,0.912,0.922,0.845},
+			    {0.816,0.902,0.912,0.931,0.922,0.922,0.912,0.912,0.922,0.845},
+			    {0.808,0.893,0.903,0.922,0.912,0.912,0.903,0.903,0.912,0.836},
+			    {0.782,0.865,0.874,0.892,0.883,0.883,0.874,0.874,0.883,0.810}};
+
+  G4double effi2[10][10] = {{0.623,0.675,0.675,0.638,0.728,0.728,0.728,0.728,0.728,0.630},
+  			    {0.548,0.594,0.594,0.561,0.640,0.640,0.640,0.640,0.640,0.554},
+  			    {0.540,0.585,0.585,0.553,0.631,0.631,0.631,0.631,0.631,0.546},
+			    {0.722,0.783,0.783,0.740,0.844,0.844,0.844,0.844,0.844,0.731},
+			    {0.780,0.846,0.846,0.799,0.912,0.912,0.912,0.912,0.912,0.790},
+			    {0.764,0.828,0.828,0.782,0.892,0.892,0.892,0.892,0.892,0.773},
+			    {0.780,0.846,0.846,0.799,0.912,0.912,0.912,0.912,0.912,0.790},
+			    // {0.600,0.600,0.600,0.600,0.600,0.600,0.600,0.600,0.600,0.600},
+			    // {0.600,0.600,0.600,0.600,0.600,0.600,0.600,0.600,0.600,0.600},
+                            //{0.600,0.600,0.600,0.600,0.600,0.600,0.600,0.600,0.600,0.600}};
+			    {0.730,0.792,0.792,0.748,0.854,0.854,0.854,0.854,0.854,0.739},
+			    {0.780,0.846,0.846,0.799,0.912,0.912,0.912,0.912,0.912,0.790},
+			    {0.764,0.828,0.828,0.782,0.892,0.892,0.892,0.892,0.892,0.773}};
+
+  G4double effi3[10][10] = {{0.619,0.748,0.834,0.843,0.834,0.817,0.826,0.826,0.783,0.619},
+			    {0.677,0.818,0.912,0.921,0.912,0.893,0.902,0.902,0.855,0.677},
+			    {0.569,0.687,0.766,0.774,0.766,0.751,0.758,0.758,0.719,0.569},
+			    {0.691,0.835,0.931,0.941,0.931,0.912,0.922,0.922,0.874,0.691},
+			    {0.684,0.827,0.922,0.931,0.922,0.903,0.912,0.912,0.865,0.684},
+			    {0.698,0.844,0.941,0.951,0.941,0.922,0.931,0.931,0.883,0.698},
+			    {0.698,0.844,0.941,0.951,0.941,0.922,0.931,0.931,0.883,0.698},
+			    {0.691,0.835,0.931,0.941,0.931,0.912,0.922,0.922,0.874,0.691},
+                            //{0.500,0.500,0.500,0.500,0.500,0.500,0.500,0.500,0.500,0.500},
+                            //{0.500,0.500,0.500,0.500,0.500,0.500,0.500,0.500,0.500,0.500}};
+  			    {0.684,0.827,0.922,0.931,0.922,0.903,0.912,0.912,0.865,0.684},
+		            {0.677,0.818,0.912,0.921,0.921,0.893,0.902,0.902,0.855,0.677}};
+
+  G4double anumber;
+
+  G4Track* track = aStep->GetTrack();
+  G4VPhysicalVolume* volume= track->GetVolume();
+  G4String volu=volume->GetName();
+  G4ParticleDefinition* particle=track->GetDefinition();
+  G4int pid = track->GetParentID();
+  G4int trid= track->GetTrackID();
+  G4StepPoint* preStepPoint = aStep->GetPreStepPoint();
+
+  G4TouchableHistory* theTouchable = (G4TouchableHistory*)(preStepPoint->GetTouchable());
+  //G4TouchableHandle theTouchable = preStepPoint->GetTouchableHandle();
+   G4int xyCopyNo = theTouchable->GetReplicaNumber(); 
+   G4int yxCopyNo = theTouchable->GetReplicaNumber(1);
+   G4int LevelNo;
+
+  G4int PlaneNo; /*from top to bottom 0-9*/
+  G4int cpy = theTouchable->GetCopyNumber(); // fired bar
+  G4int oldcpy = event_action->lasthit;
+
+  G4int view; //1 = X; 8 = Y;
+  //G4int hit,ll;
+
+  G4ThreeVector pos1 = preStepPoint->GetPosition();
+  G4ThreeVector pos9,pos0;
+ 
+  if( pid==0 && cpy>0 && cpy != oldcpy){ //cpy==0 => world volume
+                                        // the detector has been hit by the muon
+    view =  cpy/1000 % 10;
+    PlaneNo = cpy/100 % 10;
+    //G4cout << "cpy: " << cpy << " View: " << view << " PlaneNo: " << PlaneNo << G4endl;
+    
+    event_action->fired=1;
+
+    /* if (PlaneNo == 9){ 
+       pos9 = aStep->GetPostStepPoint()->GetPosition();
+        G4cout << "pos9.x: " << pos9.x()/mm << G4endl;
+     }
+     if (PlaneNo == 0){ 
+       pos0 = aStep->GetPostStepPoint()->GetPosition();
+       G4cout << "pos0.x: " << pos0.x()/mm << G4endl;
+     }*/
+     
+    if (PlaneNo == 8){    // ATTENZIONE: viste non in coincidenza
+      event_action->trigA=1;
+    }
+    if (PlaneNo == 7){
+      event_action->trigB=1;
+    }
+    if (PlaneNo == 6){
+      event_action->trigC=1;
+    }
+ 
+
+    event_action->lasthit = cpy;
+    //hit pattern ===================================
+    event_action->hx[event_action->hit]=cpy;
+    event_action->hz[event_action->hit]=PlaneNo;
+
+    if (view==1){
+      event_action->hpl1[PlaneNo]++;
+      //G4cout << "PlaneNo: " << PlaneNo << " hpl1[1]: " << event_action->hpl1[1] << G4endl;
+    }
+    if (view==8){
+      event_action->hpl8[PlaneNo]++;
+    }
+    //event_action->hy[event_action->hit]=theTouchable->GetReplicaNumber(1);
+
+    event_action->hit++;
+
+    //===============================================
+  }
+
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
