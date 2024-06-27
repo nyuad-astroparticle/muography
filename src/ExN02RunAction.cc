@@ -54,7 +54,7 @@ void ExN02RunAction::BeginOfRunAction(const G4Run* aRun)
 {
   G4cout << "### Run " << aRun->GetRunID() << " start." << G4endl;
 
-  hfile = new TFile("~/GEANT4/N02/myrootfile-tri-30GeV.root","RECREATE","MC data file"); // getting thi error: "TFile LLVM Symbols Exposed"
+  hfile = new TFile("../myrootfile-tri.root","RECREATE","MC data file"); // getting thi error: "TFile LLVM Symbols Exposed"
 
   //TFile *hfile = new TFile();
   //hfile->SetName("/home/gb115/GEANT4/N02/myrootfile.root");
