@@ -12,21 +12,12 @@
 #include "TROOT.h"
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
-
-//#include "G4VisExecutive.hh"//visualization
-// #include "globals490.hh"
-
-#ifdef G4VIS_USE
 #include "G4VisExecutive.hh"
-#endif
-#ifdef G4UI_USE
 #include "G4UIExecutive.hh"
-#endif
 
 using namespace CLHEP;
 
 int main(int argc, char** argv)
-
 {
   // User Verbose output class
   G4VSteppingVerbose* verbosity = new ExN02SteppingVerbose;
@@ -57,15 +48,12 @@ int main(int argc, char** argv)
 
   // Initialize G4 kernel
   runManager->Initialize();
+
   // Get the pointer to the User Interface manager
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
   G4UIExecutive* ui = nullptr; // Declare ui outside conditional scope
-
-#ifdef G4VIS_USE
-  G4VisManager* visManager = new G4VisExecutive; // 
+  G4VisManager* visManager = new G4VisExecutive; 
   visManager->Initialize();
-#endif
-
 
   if (argc != 1) // batch mode
   {
@@ -74,23 +62,17 @@ int main(int argc, char** argv)
     UImanager->ApplyCommand(command + fileName);
   }
   else // interactive mode : define UI session
-#ifdef G4UI_USE
+  {
     ui = new G4UIExecutive(argc, argv);
-#ifdef G4VIS_USE
     UImanager->ApplyCommand("/control/execute vis.mac");
-#endif
     ui->SessionStart();
-    delete ui;
-#endif
-
-#ifdef G4VIS_USE
-    delete visManager;
-#endif
-  
+  }
 
   // Free the store: user actions, physics_list and detector_description are
-  //                 owned and deleted by the run manager, so they should not
-  //                 be deleted in the main() program!
+  // owned and deleted by the run manager, so they should not
+  // be deleted in the main() program!
+  delete ui;
+  delete visManager;
   delete runManager;
   delete verbosity;
 

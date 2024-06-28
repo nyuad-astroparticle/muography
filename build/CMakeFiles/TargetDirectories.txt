@@ -1,0 +1,3 @@
+/home/taskim/Desktop/muography/build/CMakeFiles/rebuild_cache.dir
+/home/taskim/Desktop/muography/build/CMakeFiles/edit_cache.dir
+/home/taskim/Desktop/muography/build/CMakeFiles/exampleN02.dir
