@@ -1,6 +1,5 @@
 # Variables for options
-ENABLE_VIS := 1
-ENABLE_UI := 1
+MAC_OS := 1
 
 name := exampleN02
 G4TARGET := $(name)
@@ -33,23 +32,19 @@ SRC := exampleN02.cc $(wildcard ./src/*.cc)
 # Object files
 OBJ := $(SRC:.cc=.o)
 
-CPPFLAGS += -I$(G4INCLUDES) -I$(ROOTINCLUDE) -I$(GLINCLUDE) -I$(PROJECT_INCLUDE) -DKL_USE_ROOT=1 -DG4VIS_USE -DG4UI_USE -DGEANT4_USE_OPENGL_X11=ON $(shell $(ROOTINSTALL)/bin/root-config --cflags)
-LDFLAGS += -L$(G4LIB) -L$(ROOTLIB) -L$(GLLIB) -lm -ltbb $(shell $(ROOTINSTALL)/bin/root-config --libs) -Wl,-rpath,$(ROOTLIB)
+# CPPFLAGS += -I$(G4INCLUDES) -I$(ROOTINCLUDE) -I$(GLINCLUDE) -I$(PROJECT_INCLUDE) -DKL_USE_ROOT=1 -DG4VIS_USE -DG4UI_USE -DGEANT4_USE_OPENGL_X11=ON $(shell $(ROOTINSTALL)/bin/root-config --cflags)
+CPPFLAGS += $(shell $(G4INSTALL)/bin/geant4-config --cflags) -I$(G4INCLUDES) -I$(ROOTINCLUDE) -I$(PROJECT_INCLUDE) -DKL_USE_ROOT=1 -DG4VIS_USE -DG4UI_USE -DGEANT4_USE_OPENGL_X11=ON $(shell $(ROOTINSTALL)/bin/root-config --cflags)
+# LDFLAGS += -L$(G4LIB) -L$(ROOTLIB) -L$(GLLIB) -lm -ltbb $(shell $(ROOTINSTALL)/bin/root-config --libs) -Wl,-rpath,$(ROOTLIB)
+LDFLAGS += -L$(G4LIB) -L$(ROOTLIB) -ltbb $(shell $(ROOTINSTALL)/bin/root-config --libs) -Wl,-rpath,$(G4LIB)  -Wl,-rpath,$(ROOTLIB)
 
-LDLIBS += $(shell geant4-config --libs) -lGL -lGLU -lGLEW -lGLX
+ifeq ($(MAC_OS), 1)
+	LDLIBS += $(shell geant4-config --libs) -framework OpenGL -lglfw -lGLEW 
+else
+	LDLIBS += $(shell geant4-config --libs) -lGL -lGLU -lGLEW -lGLX
+endif
 
-CPPFLAGS += $(shell pkg-config --cflags Qt5Core Qt5Widgets Qt5Gui)
-LDFLAGS += `pkg-config --libs Qt5Core Qt5Widgets Qt5Gui`
-
-# # Conditionally define G4VIS_USE based on ENABLE_VIS
-# ifeq ($(ENABLE_VIS), 1)
-# 	CPPFLAGS += -DG4VIS_USE
-# endif
-
-# # Conditionally define G4UI_USE based on ENABLE_UI
-# ifeq ($(ENABLE_UI), 1)
-# 	CPPFLAGS += -DG4UI_USE
-# endif
+# CPPFLAGS += $(shell pkg-config --cflags Qt5Core Qt5Widgets Qt5Gui)
+# LDFLAGS += `pkg-config --libs Qt5Core Qt5Widgets Qt5Gui`m
 
 .PHONY: all clean
 
