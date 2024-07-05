@@ -1,5 +1,5 @@
 # Variables for options
-MAC_OS := 1
+MAC_OS := 0
 
 name := exampleN02
 G4TARGET := $(name)

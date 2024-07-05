@@ -56,6 +56,9 @@
 #include "G4Colour.hh"
 
 #include "G4ios.hh"
+#include "G4ParticleTable.hh"
+#include "G4MuonPlus.hh"
+#include "G4GeneralParticleSource.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
@@ -168,8 +171,11 @@ G4VPhysicalVolume* ExN02DetectorConstruction::Construct()
   //------------------------------ 
   // Tracker
   //------------------------------
-  
-  G4ThreeVector positionTracker = G4ThreeVector(0,0,0);
+  // Example offset parameters
+G4double yOffset = 9.5 * cm;
+G4double zOffset = 9.5 * cm;
+
+G4ThreeVector positionTracker = G4ThreeVector(0,0,0);
   
   //  solidTracker = new G4Box("tracker",trackerSize,trackerSize,trackerSize);
   //  logicTracker = new G4LogicalVolume(solidTracker , Air, "Tracker",0,0,0);  
@@ -188,8 +194,14 @@ G4VPhysicalVolume* ExN02DetectorConstruction::Construct()
   // An example of Parameterised volumes
   // dummy values for G4Box -- modified by parameterised volume
 
-  solidbar1 = new G4Trd("solidbar1", 2*cm, 0*cm, 20*cm, 20*cm, 1.732*cm);
-  logicbar1 = new G4LogicalVolume(solidbar1,ChamberMater,"Bar1",0,0,0);
+ G4double GetXHalfLength1 = 20*cm; //2*cm //const;
+ G4double GetXHalfLength2 = 0*cm; //0*cm;
+ G4double GetYHalfLength1 = 50*cm; //20*cm;
+ G4double GetYHalfLength2 = 50*cm; //20*cm;
+ G4double GetZHalfLength = 10.732*cm; //1.732*cm; 
+    
+  solidbar1 = new G4Trd("solidbar1", GetXHalfLength1, GetXHalfLength2, GetYHalfLength1, GetYHalfLength2, GetZHalfLength);
+  logicbar1 = new G4LogicalVolume(solidbar1,ChamberMater,"Bar1",0,0,0); 
 
   //solidbar2 = new G4Trd("solidbar2", 0*cm, 5*cm, 20*cm, 20*cm, 4*cm);
   //logicbar2 = new G4LogicalVolume(solidbar2,ChamberMater,"Bar2",0,0,0);
@@ -214,14 +226,20 @@ G4VPhysicalVolume* ExN02DetectorConstruction::Construct()
    ro->rotateX(180*deg);
    ro->rotateZ(90*deg);
 
- for(kk =0; kk<10; kk++){
-  for(jj =0; jj<10; jj++){
+  G4double shiftDistance = GetXHalfLength1;
+  G4double Separation = 1*cm;
+  // G4double horizontalShift = 0*cm;
+  G4double innerLayerGap = 2*GetZHalfLength+Separation; //4 
+  G4double interLayerGap = 4*GetZHalfLength+Separation + 20*cm; //20
+  G4double triangleDistance = 2*GetXHalfLength1;
+ for(kk =0; kk<2; kk++){
+  for(jj =0; jj<2; jj++){
 
     //  . X-view
     // / \
     //
-    G4VPhysicalVolume* physicbar1 =   new G4PVPlacement(0,
-						G4ThreeVector((jj*4-22)*cm,0,kk*10*cm),
+    G4VPhysicalVolume* physicbar1 = new G4PVPlacement(0,
+						G4ThreeVector((jj*triangleDistance-shiftDistance),0 + yOffset,kk*interLayerGap),
 					        logicbar1,
 				       	        "physicbar1",
 						logicWorld,
@@ -232,17 +250,17 @@ G4VPhysicalVolume* ExN02DetectorConstruction::Construct()
     // \ /
     //  `
     G4VPhysicalVolume* physicbar2 =   new G4PVPlacement(rm,
-						G4ThreeVector((jj*4-20)*cm,0,kk*10*cm),
+						G4ThreeVector((jj*triangleDistance),0+yOffset,kk*interLayerGap),
 					        logicbar1,
 				       	        "physicbar2",
 						logicWorld,
 					        0,
 						1001+(2*jj)+100*kk);
     //  . Y-view
-    // / \
+    // / 
     //
     G4VPhysicalVolume* physicbar3 =   new G4PVPlacement(rn,
-						G4ThreeVector(0,(jj*4-22)*cm,kk*10*cm+4*cm),
+						G4ThreeVector(0+yOffset,(jj*triangleDistance-shiftDistance),kk*interLayerGap+innerLayerGap),
 					        logicbar1,
 				       	        "physicbar3",
 						logicWorld,
@@ -252,7 +270,7 @@ G4VPhysicalVolume* ExN02DetectorConstruction::Construct()
     // \ /
     //  `
     G4VPhysicalVolume* physicbar4 =   new G4PVPlacement(ro,
-						G4ThreeVector(0,(jj*4-20)*cm,kk*10*cm+4*cm),
+						G4ThreeVector(0+yOffset,(jj*triangleDistance), kk*interLayerGap+innerLayerGap),
 					        logicbar1,
 				       	        "physicbar4",
 						logicWorld,
@@ -273,6 +291,7 @@ G4VPhysicalVolume* ExN02DetectorConstruction::Construct()
   
   //logicbar1->SetSensitiveDetector( aTrackerSD );
   //logicbar2->SetSensitiveDetector( aTrackerSD );
+
 
 //--------- Visualization attributes -------------------------------
 
