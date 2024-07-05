@@ -56,9 +56,6 @@
 #include "G4Colour.hh"
 
 #include "G4ios.hh"
-#include "G4ParticleTable.hh"
-#include "G4MuonPlus.hh"
-#include "G4GeneralParticleSource.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
