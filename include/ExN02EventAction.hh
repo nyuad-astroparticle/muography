@@ -41,9 +41,9 @@ class G4Event;
 class G4String;
 class ExN02RunAction;
 class ExN02PrimaryGeneratorAction;
-class TH1D;
-class TH1I;
-class TH1F;
+// class TH1D;
+// class TH1I;
+// class TH1F;
 
 
 
@@ -59,22 +59,22 @@ class ExN02EventAction : public G4UserEventAction
     void BeginOfEventAction(const G4Event*);
     void EndOfEventAction(const G4Event*);
 
-  G4int fired;
-  G4int trigA;
-  G4int trigB;
-  G4int trigC;
-  G4int trigger;
-  G4int lasthit;
-  G4double nrgpri;
-  G4double tetaev;
-  G4double phiev;
-  G4int hit;
-  G4int ll;
-  G4int hx[200];
-  G4int hy[200];
-  G4int hz[200];
-  G4int hpl1[10];
-  G4int hpl8[10];
+  // G4int fired;
+  // G4int trigA;
+  // G4int trigB;
+  // G4int trigC;
+  // G4int trigger;
+  // G4int lasthit;
+  // G4double nrgpri;
+  // G4double tetaev;
+  // G4double phiev;
+  // G4int hit;
+  // G4int ll;
+  // G4int hx[200];
+  // G4int hy[200];
+  // G4int hz[200];
+  // G4int hpl1[10];
+  // G4int hpl8[10];
 
 
 private:

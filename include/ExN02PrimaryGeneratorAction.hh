@@ -35,12 +35,18 @@
 
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "ExN02DetectorConstruction.hh"
+#include "G4GeneralParticleSource.hh"
 #include "globals.hh"
+#include "G4ParticleTable.hh"
+#include "G4Event.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ThreeVector.hh"
 
 class ExN02DetectorConstruction; //forward declaration
-class G4ParticleGun;
+// class G4ParticleGun;
 class G4Event;
-class TH1;
+// class G4ParticleDefinition;                                     // Store parameters of a particle
+// class TH1;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
  
@@ -50,28 +56,14 @@ class ExN02PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     ExN02PrimaryGeneratorAction(ExN02DetectorConstruction*);    
    ~ExN02PrimaryGeneratorAction();
 
-  public:
-    G4double getenergy;
-    G4double tetadeg;
-    G4double phideg;
-
-    G4double Xstart;
-    G4double Ystart;
-    G4double Zstart;
-
-    G4double Xdir;
-    G4double Ydir;
-    G4double Zdir;
-
-    G4double xx;
-    G4double yy;
-    G4double zz;
-
     void GeneratePrimaries(G4Event*);
 
   private:
-    G4ParticleGun* particleGun;
+    //
+    //G4ParticleGun* particleGun;
+    G4GeneralParticleSource* particleGun;  // Use G4GeneralParticleSource instead of G4ParticleGun
     ExN02DetectorConstruction* myDetector;
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
