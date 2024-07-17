@@ -1,0 +1,28 @@
+#this is to generate an uniform flux of muons coming from above the detector
+
+/control/verbose 0
+/tracking/verbose 0
+
+/gps/particle mu-
+/gps/energy 30.0 GeV
+
+/gps/pos/type Plane
+/gps/pos/shape Square
+/gps/pos/halfz 2.5 m
+/gps/pos/halfx 2.5 m
+/gps/pos/halfy 2.5 m
+#/gps/pos/rot1 1 0 0
+#/gps/pos/rot2 0 1 0
+/gps/pos/centre 0 0 2.5 m
+
+/gps/ang/type cos
+
+
+/gps/ang/mintheta 0 deg
+/gps/ang/maxtheta 30 deg
+#/gps/ang/minphi 0 deg 
+#/gps/ang/maxphi 360 deg
+
+/run/beamOn 100
+# Visualize trajectories and output only particles hitting the detector
+# /tracking/storeTrajectory 1
